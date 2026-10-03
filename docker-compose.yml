@@ -1,0 +1,21 @@
+name: subastas-copart
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: 'Y'
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: 'Subastas#2026'
+    ports:
+      - '1436:1433'
+    volumes:
+      - subastas_mssql_data:/var/opt/mssql
+    healthcheck:
+      test: ['CMD-SHELL', '/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "Subastas#2026" -Q "SELECT 1" || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  subastas_mssql_data:
