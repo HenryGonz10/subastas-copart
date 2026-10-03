@@ -1,9 +1,9 @@
 # AutoSubastas GT · Subastas de vehículos en tiempo real (estilo Copart)
 
-## 🌐 Sitio publicado: **[https://TU-FRONTEND.onrender.com](https://TU-FRONTEND.onrender.com)**
+## 🌐 Sitio publicado: **[https://henrygonz10.github.io/subastas-copart/](https://henrygonz10.github.io/subastas-copart/)**
 
-> API: [https://TU-API.onrender.com/api/health](https://TU-API.onrender.com/api/health)
-> *(Reemplaza ambos enlaces por las URLs reales después de desplegar; ver sección [Despliegue](#despliegue).)*
+> API: [https://subastas-copart-api.onrender.com/api/health](https://subastas-copart-api.onrender.com/api/health)
+> *(El API gratuito de Render se duerme tras 15 min sin uso: la primera carga puede tardar ~1 minuto.)*
 
 ## 🔑 Usuarios de prueba
 
@@ -99,9 +99,19 @@ Para correr las pruebas de extremo a extremo con el API encendido: `npm run test
 
 ## Despliegue
 
-Despliegue gratuito sugerido: **Azure SQL Database** (SQL Server) + **Render** (API con WebSockets y frontend estático).
+Despliegue gratuito sugerido: **SQL Server en MonsterASP.NET** (o Azure SQL Database) + **Render** (API con WebSockets y frontend estático).
 
-### 1. Base de datos: Azure SQL Database
+### 1. Base de datos: SQL Server en MonsterASP.NET (gratis, sin tarjeta)
+
+1. Crea una cuenta en [MonsterASP.NET](https://www.monsterasp.net/) (plan gratuito: 1 base SQL Server de 1 GB).
+2. En el panel: **Databases → Create database** (SQL Server 2022).
+3. Entra a la base → **Users and remote** → activa **Remote Access** (viene desactivado).
+4. Copia del panel el *server*, el nombre de la base, el usuario y la contraseña, y arma la cadena:
+   ```
+   sqlserver://<server>:1433;database=<db>;user=<usuario>;password=<password>;encrypt=true;trustServerCertificate=true
+   ```
+
+### 1 (alternativa). Base de datos: Azure SQL Database
 
 1. En el portal de Azure crea una **SQL Database** usando la oferta gratuita ("Apply free offer"), con autenticación SQL (usuario y contraseña).
 2. En *Networking* del servidor activa **Allow Azure services and resources to access this server** y agrega la regla de firewall `0.0.0.0 – 255.255.255.255` (Render no tiene IP fija).
@@ -110,19 +120,21 @@ Despliegue gratuito sugerido: **Azure SQL Database** (SQL Server) + **Render** (
    sqlserver://<servidor>.database.windows.net:1433;database=<db>;user=<usuario>;password=<password>;encrypt=true;trustServerCertificate=false
    ```
 
-### 2. API y frontend: Render
+### 2. Web API: Render
 
-1. Sube este repositorio a GitHub.
-2. En Render: **New → Blueprint** y selecciona el repositorio; se usará `render.yaml` para crear `subastas-copart-api` y `subastas-copart-web`.
-3. Variables de entorno:
-   - `subastas-copart-api` → `DATABASE_URL` (la cadena de Azure) y `CORS_ORIGIN` (la URL del frontend, por ejemplo `https://subastas-copart-web.onrender.com`).
-   - `subastas-copart-web` → `VITE_API_URL` (la URL del API, por ejemplo `https://subastas-copart-api.onrender.com`).
-4. El build del API ejecuta las migraciones y el seed automáticamente (el seed no duplica datos si ya existen).
-5. Copia la URL del frontend al inicio de este README.
+1. En Render: **New → Blueprint** y selecciona este repositorio; `render.yaml` crea el servicio `subastas-copart-api`.
+2. Ingresa `DATABASE_URL` (la cadena del paso 1). `CORS_ORIGIN` ya apunta a `https://henrygonz10.github.io`.
+3. El build ejecuta las migraciones y el seed automáticamente (el seed no duplica datos si ya existen).
+
+> En el plan gratuito de Render el API se suspende tras 15 minutos sin tráfico; la primera petición puede tardar ~1 minuto en despertarlo.
+
+### 3. Frontend: GitHub Pages
+
+1. En el repositorio: **Settings → Secrets and variables → Actions → Variables → New repository variable**: `VITE_API_URL` = URL del API (por ejemplo `https://subastas-copart-api.onrender.com`, sin `/` final).
+2. **Settings → Pages → Source: GitHub Actions**.
+3. Cada push a `main` que toque `frontend/` publica el sitio con `.github/workflows/deploy-frontend.yml` (también se puede lanzar a mano desde **Actions → Publicar frontend en GitHub Pages → Run workflow**).
 
 > Alternativa para el frontend: **Vercel** (directorio raíz `frontend`, variable `VITE_API_URL`); `frontend/vercel.json` ya incluye la regla para las rutas de la SPA.
->
-> En el plan gratuito de Render el API se suspende tras 15 minutos sin tráfico; la primera petición puede tardar ~1 minuto en despertarlo. Lo mismo ocurre con Azure SQL cuando se pausa por inactividad.
 
 ## Endpoints del API
 

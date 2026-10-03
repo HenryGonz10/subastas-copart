@@ -1,4 +1,4 @@
-# Blueprint de Render: crea el Web API y el frontend en un solo paso.
+# Blueprint de Render para el Web API (el frontend se publica en GitHub Pages).
 # Render > New > Blueprint > selecciona este repositorio.
 services:
   - type: web
@@ -19,18 +19,4 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: CORS_ORIGIN
-        sync: false
-
-  - type: web
-    name: subastas-copart-web
-    runtime: static
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    envVars:
-      - key: VITE_API_URL
-        sync: false
+        value: https://henrygonz10.github.io
