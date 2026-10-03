@@ -19,7 +19,9 @@ export function AuthProvider({ children }) {
     api
       .me()
       .then(({ user }) => setUser(user))
-      .catch(() => applySession(null))
+      .catch((err) => {
+        if (err.status === 401 || err.status === 404) applySession(null);
+      })
       .finally(() => setLoading(false));
   }, [token, user, applySession]);
 
