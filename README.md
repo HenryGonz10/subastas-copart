@@ -52,7 +52,8 @@ subastas-copart/
 │       └── context/      sesión, socket y catálogos
 ├── database/             schema.sql + diagrama entidad-relación
 ├── docker-compose.yml    SQL Server local
-└── render.yaml           despliegue en Render (API + frontend)
+├── render.yaml           despliegue del API en Render
+└── .github/workflows/    publicación del frontend en GitHub Pages
 ```
 
 ## Cómo se cumple cada requisito
@@ -99,7 +100,7 @@ Para correr las pruebas de extremo a extremo con el API encendido: `npm run test
 
 ## Despliegue
 
-Despliegue gratuito sugerido: **SQL Server en MonsterASP.NET** (o Azure SQL Database) + **Render** (API con WebSockets y frontend estático).
+Despliegue gratuito sugerido: **SQL Server en MonsterASP.NET** (o Azure SQL Database) + **Render** (API con WebSockets) + **GitHub Pages** (frontend).
 
 ### 1. Base de datos: SQL Server en MonsterASP.NET (gratis, sin tarjeta)
 
@@ -130,8 +131,8 @@ Despliegue gratuito sugerido: **SQL Server en MonsterASP.NET** (o Azure SQL Data
 
 ### 3. Frontend: GitHub Pages
 
-1. En el repositorio: **Settings → Secrets and variables → Actions → Variables → New repository variable**: `VITE_API_URL` = URL del API (por ejemplo `https://subastas-copart-api.onrender.com`, sin `/` final).
-2. **Settings → Pages → Source: GitHub Actions**.
+1. **Settings → Pages → Source: GitHub Actions**.
+2. El build usa `https://subastas-copart-api.onrender.com` como URL del API. Si Render te asigna otra, defínela en **Settings → Secrets and variables → Actions → Variables** como `VITE_API_URL` (sin `/` final).
 3. Cada push a `main` que toque `frontend/` publica el sitio con `.github/workflows/deploy-frontend.yml` (también se puede lanzar a mano desde **Actions → Publicar frontend en GitHub Pages → Run workflow**).
 
 > Alternativa para el frontend: **Vercel** (directorio raíz `frontend`, variable `VITE_API_URL`); `frontend/vercel.json` ya incluye la regla para las rutas de la SPA.
