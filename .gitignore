@@ -3,6 +3,8 @@ dist/
 .env
 .env.*
 !.env.example
+!frontend/.env.development
+!frontend/.env.production
 *.log
 .DS_Store
 .vscode/

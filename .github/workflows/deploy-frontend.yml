@@ -31,7 +31,6 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://subastas-copart-api.onrender.com' }}
           VITE_BASE: /${{ github.event.repository.name }}/
       # GitHub Pages no reescribe rutas de la SPA: 404.html entrega la app en cualquier ruta.
       - run: cp dist/index.html dist/404.html

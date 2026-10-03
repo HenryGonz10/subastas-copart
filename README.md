@@ -89,8 +89,7 @@ npm run db:seed               # catálogos, usuarios de prueba e inventario
 npm run dev                   # http://localhost:4000
 
 # 3. Frontend (otra terminal)
-cd frontend
-cp .env.example .env
+cd frontend                   # .env.development ya apunta a http://localhost:4000
 npm install
 npm run dev                   # http://localhost:5173
 ```
@@ -132,10 +131,10 @@ Despliegue gratuito sugerido: **SQL Server en MonsterASP.NET** (o Azure SQL Data
 ### 3. Frontend: GitHub Pages
 
 1. **Settings → Pages → Source: GitHub Actions**.
-2. El build usa `https://subastas-copart-api.onrender.com` como URL del API. Si Render te asigna otra, defínela en **Settings → Secrets and variables → Actions → Variables** como `VITE_API_URL` (sin `/` final).
+2. La URL del API para producción está en `frontend/.env.production` (`VITE_API_URL=https://subastas-copart-api.onrender.com`). Si el backend cambia de dirección, edita ese archivo y haz push.
 3. Cada push a `main` que toque `frontend/` publica el sitio con `.github/workflows/deploy-frontend.yml` (también se puede lanzar a mano desde **Actions → Publicar frontend en GitHub Pages → Run workflow**).
 
-> Alternativa para el frontend: **Vercel** (directorio raíz `frontend`, variable `VITE_API_URL`); `frontend/vercel.json` ya incluye la regla para las rutas de la SPA.
+> Alternativa para el frontend: **Vercel** (directorio raíz `frontend`; toma la URL del API de `.env.production`); `frontend/vercel.json` ya incluye la regla para las rutas de la SPA.
 
 ## Endpoints del API
 
